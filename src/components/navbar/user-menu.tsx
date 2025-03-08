@@ -1,9 +1,8 @@
 "use client";
 import { signOutAction } from "@/auth/actions";
 import { useTRPC } from "@/trpc/client/react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
-import { Suspense } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
 	DropdownMenu,
@@ -16,24 +15,24 @@ import {
 import { Skeleton } from "../ui/skeleton";
 
 export function UserMenu() {
-	return (
-		<Suspense fallback={<Skeleton className="size-8 rounded-full" />}>
-			<UserMenuLoader />
-		</Suspense>
-	);
-}
-
-function UserMenuLoader() {
 	const trpc = useTRPC();
-	const { data: user } = useSuspenseQuery(trpc.users.getUser.queryOptions());
+	const { data: user, isLoading } = useQuery(trpc.users.getUser.queryOptions());
+
+	if (isLoading) {
+		return <Skeleton className="size-8 rounded-full" />;
+	}
+
+	if (!user) {
+		return null;
+	}
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Avatar>
+				<Avatar className="size-8">
 					<AvatarImage src={user.user_metadata.avatar_url} />
-					<AvatarFallback>
-						{user.user_metadata.display_name?.slice(0, 2).toUpperCase()}
+					<AvatarFallback className="text-xs">
+						{user.email?.slice(0, 2).toUpperCase()}
 					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>

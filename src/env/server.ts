@@ -8,6 +8,7 @@ export const env = createEnv({
 		DATABASE_URL: z.string().min(1).startsWith("postgresql://"),
 		SUPABASE_URL: z.string().min(1),
 		SUPABASE_ANON_KEY: z.string().min(1),
+		OPENAI_API_KEY: z.string().min(1),
 	},
 	experimental__runtimeEnv: process.env,
 });

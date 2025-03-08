@@ -1,6 +1,7 @@
 "use client";
 import { CalendarIcon, LightbulbIcon, MapPinIcon } from "lucide-react";
 import { ChatBox } from "./box";
+import { ChatMessage } from "./message";
 import { SuggestionCard } from "./suggestion-card";
 
 export function Chat() {
@@ -27,6 +28,7 @@ export function Chat() {
 				/>
 			</aside>
 
+			<ChatMessage message="Hello, how are you?" />
 			<ChatBox onSubmit={() => {}} />
 		</div>
 	);

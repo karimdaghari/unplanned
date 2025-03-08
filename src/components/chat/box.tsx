@@ -14,7 +14,6 @@ export function ChatBox({ onSubmit }: ChatBoxProps) {
 		},
 		onSubmit: ({ value }) => {
 			onSubmit(value.message);
-			form.reset();
 		},
 	});
 
