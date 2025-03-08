@@ -1,14 +1,9 @@
 "use server";
 
+import { resetPasswordSchema } from "@/auth/schemas/reset-password";
 import { createClient } from "@/db/supabase/server";
 import { encodedRedirect } from "@/db/supabase/utils";
 import { serverAction } from "@/trpc/lib/procedures";
-import { z } from "zod";
-
-export const resetPasswordSchema = z.object({
-	password: z.string().min(6),
-	confirmPassword: z.string().min(6),
-});
 
 export const resetPasswordAction = serverAction
 	.meta({ span: "resetPasswordAction" })

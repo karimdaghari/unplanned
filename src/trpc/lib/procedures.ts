@@ -35,7 +35,7 @@ export const authProcedure = procedure.use(async ({ ctx, next }) => {
 
 /**
  * Base procedure for server actions.
- * Use this for endpoints that should be accessible to authenticated users.
+ * Use this for endpoints that should be accessible to all users (auth or not)
  */
 export const serverAction = serverActionProcedureBase;
 

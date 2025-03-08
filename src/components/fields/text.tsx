@@ -11,10 +11,12 @@ interface TextFieldProps extends InputProps {
 export function TextField({ label, description, ...props }: TextFieldProps) {
 	const field = useFieldContext<string>();
 
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useStore(field.store, (state) =>
+		state.meta.errors.map(({ message }) => message),
+	);
 
 	return (
-		<div>
+		<div className="space-y-2">
 			{label && <Label>{label}</Label>}
 			<Input
 				{...props}

@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/client/react";
 import { ThemeProvider } from "next-themes";
 import { Geist } from "next/font/google";
 import Link from "next/link";
+import { Toaster } from "sonner";
 
 const defaultUrl = env.VERCEL_URL
 	? `https://${env.VERCEL_URL}`
@@ -37,6 +38,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
+					<Toaster richColors position="bottom-right" />
 					<TRPCReactProvider>
 						<main className="min-h-screen flex flex-col items-center">
 							<div className="flex-1 w-full flex flex-col gap-20 items-center">

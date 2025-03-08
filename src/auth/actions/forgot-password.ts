@@ -1,16 +1,11 @@
 "use server";
 
+import { forgotPasswordSchema } from "@/auth/schemas/forgot-password";
 import { createClient } from "@/db/supabase/server";
 import { encodedRedirect } from "@/db/supabase/utils";
 import { serverAction } from "@/trpc/lib/procedures";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-export const forgotPasswordSchema = z.object({
-	email: z.string().email(),
-	callbackUrl: z.string().optional(),
-});
 
 export const forgotPasswordAction = serverAction
 	.meta({ span: "forgotPasswordAction" })

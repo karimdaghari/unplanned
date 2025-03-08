@@ -1,15 +1,10 @@
 "use server";
 
+import { signInSchema } from "@/auth/schemas/sign-in";
 import { createClient } from "@/db/supabase/server";
 import { encodedRedirect } from "@/db/supabase/utils";
 import { serverAction } from "@/trpc/lib/procedures";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-export const signInSchema = z.object({
-	email: z.string().email(),
-	password: z.string(),
-});
 
 export const signInAction = serverAction
 	.meta({ span: "signInAction" })
