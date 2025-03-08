@@ -1,36 +1,72 @@
 {
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@radix-ui/react-checkbox": "^1.1.1",
-    "@radix-ui/react-dropdown-menu": "^2.1.1",
-    "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@supabase/ssr": "latest",
-    "@supabase/supabase-js": "latest",
-    "autoprefixer": "10.4.20",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.468.0",
-    "next": "latest",
-    "next-themes": "^0.4.3",
-    "prettier": "^3.3.3",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "22.10.2",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "19.0.2",
-    "postcss": "8.4.49",
-    "tailwind-merge": "^2.5.2",
-    "tailwindcss": "3.4.17",
-    "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.7.2"
-  },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "next dev --turbo",
+		"build": "next build",
+		"start": "next start",
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
+		"lint": "pnpm biome check --write",
+		"ui:add": "pnpm dlx shadcn@latest add",
+		"db:kit": "pnpm with-env drizzle-kit",
+		"db:push": "pnpm db:kit push",
+		"db:generate": "pnpm db:kit generate",
+		"db:migrate": "pnpm db:kit migrate",
+		"db:studio": "pnpm db:kit studio",
+		"with-env": "pnpm dotenv -e .env --"
+	},
+	"dependencies": {
+		"@radix-ui/react-checkbox": "1.1.4",
+		"@radix-ui/react-dropdown-menu": "2.1.6",
+		"@radix-ui/react-label": "2.1.2",
+		"@radix-ui/react-slot": "1.1.2",
+		"@supabase/ssr": "0.5.2",
+		"@supabase/supabase-js": "2.49.1",
+		"@t3-oss/env-nextjs": "0.12.0",
+		"@tanstack/react-form": "1.0.5",
+		"@tanstack/react-query": "5.67.2",
+		"@tanstack/react-query-devtools": "5.67.2",
+		"@trpc/client": "11.0.0-rc.824",
+		"@trpc/server": "11.0.0-rc.824",
+		"@trpc/tanstack-react-query": "11.0.0-rc.824",
+		"class-variance-authority": "0.7.1",
+		"client-only": "0.0.1",
+		"clsx": "2.1.1",
+		"dotenv-cli": "8.0.0",
+		"drizzle-orm": "0.40.0",
+		"drizzle-zod": "0.7.0",
+		"jiti": "1",
+		"lucide-react": "0.479.0",
+		"next": "15.2.1",
+		"next-themes": "0.4.4",
+		"postgres": "3.4.5",
+		"prettier": "3.5.3",
+		"react": "19.0.0",
+		"react-dom": "19.0.0",
+		"server-only": "0.0.1",
+		"superjson": "2.2.2",
+		"zod": "3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@tailwindcss/postcss": "4.0.12",
+		"@types/node": "22.13.10",
+		"@types/react": "19.0.10",
+		"@types/react-dom": "19.0.4",
+		"drizzle-kit": "0.30.5",
+		"postcss": "8.5.3",
+		"tailwind-merge": "3.0.2",
+		"tailwindcss": "4.0.12",
+		"tailwindcss-animate": "1.0.7",
+		"typescript": "5.8.2"
+	},
+	"packageManager": "pnpm@10.6.1+sha512.40ee09af407fa9fbb5fbfb8e1cb40fbb74c0af0c3e10e9224d7b53c7658528615b2c92450e74cfad91e3a2dcafe3ce4050d80bda71d757756d2ce2b66213e9a3",
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"esbuild",
+			"sharp"
+		]
+	}
 }

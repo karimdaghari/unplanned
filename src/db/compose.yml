@@ -1,0 +1,18 @@
+services:
+  db:
+    container_name: unplanned-db
+    image: postgres:15.8
+    restart: always
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_DATABASE: app
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - unplanned-network
+volumes:
+  db:
+networks:
+  unplanned-network:
