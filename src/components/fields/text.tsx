@@ -1,5 +1,6 @@
 import { useFieldContext } from "@/hooks/form-context";
 import { useStore } from "@tanstack/react-form";
+import { Typography } from "../typography";
 import { Input, type InputProps } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -23,8 +24,12 @@ export function TextField({ label, description, ...props }: TextFieldProps) {
 				value={field.state.value}
 				onChange={(e) => field.handleChange(e.target.value)}
 			/>
-			{description && <p>{description}</p>}
-			{errors && <p>{errors.join(", ")}</p>}
+			{description && <Typography variant="muted">{description}</Typography>}
+			{errors && (
+				<Typography variant="small" className="text-destructive">
+					{errors.join(", ")}
+				</Typography>
+			)}
 		</div>
 	);
 }

@@ -6,6 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will need to use are documented accordingly near the end.
  */
 
+import { auth } from "@/auth/auth";
 import { db } from "@/db/client";
 import { createClient } from "@/db/supabase/server";
 import { initTRPC } from "@trpc/server";
@@ -26,15 +27,14 @@ import { ZodError } from "zod";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-	const supabase = await createClient();
+	const user = await auth();
 
-	const {
-		data: { user },
-	} = await supabase.auth.getUser();
+	const supabase = await createClient();
 
 	return {
 		db,
 		user,
+		supabase,
 		...opts,
 	};
 };
@@ -80,15 +80,13 @@ export const serverActionProcedureBase = tServerAction.procedure
 		}),
 	)
 	.use(async (opts) => {
+		const user = await auth();
 		const supabase = await createClient();
-
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
 
 		const ctx = {
 			user,
 			db,
+			supabase,
 		};
 
 		return opts.next({ ctx });
