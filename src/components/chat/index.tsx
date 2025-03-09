@@ -2,14 +2,17 @@
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client/react";
 import { type Message, useChat } from "@ai-sdk/react";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon, LightbulbIcon, MapPinIcon } from "lucide-react";
+import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { ScrollArea } from "../ui/scroll-area";
 import { ChatBox } from "./box";
 import { ChatFooter } from "./footer";
 import { ChatHeader } from "./header";
 import { ChatMessage } from "./message";
+import { ThinkingBox } from "./message-thinking";
 import { SuggestionCard } from "./suggestion-card";
 
 interface ChatProps {
@@ -19,9 +22,9 @@ interface ChatProps {
 
 export function Chat({ id: chatId, initialMessages }: ChatProps) {
 	const trpc = useTRPC();
-	const saveMessage = useMutation(
-		trpc.conversations.saveMessage.mutationOptions(),
-	);
+
+	const { data: isLoggedIn } = useQuery(trpc.users.isLoggedIn.queryOptions());
+
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const {
@@ -35,20 +38,8 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 	} = useChat({
 		id: chatId,
 		initialMessages,
-		onFinish({ content, parts, id, role, createdAt }) {
-			if (!chatId) return;
-
-			saveMessage.mutate({
-				message: {
-					id,
-					content,
-					createdAt,
-					role,
-					parts,
-					conversationUuid: chatId,
-				},
-			});
-		},
+		sendExtraMessageFields: true,
+		generateId: nanoid,
 	});
 
 	const scrollToBottom = useCallback(() => {
@@ -60,6 +51,18 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 	useEffect(() => {
 		scrollToBottom();
 	}, [scrollToBottom, messages.length, status]);
+
+	const handleSuggestionClick = (content: string) => {
+		if (!isLoggedIn) {
+			toast.info("You need to sign in to use this feature");
+			return;
+		}
+
+		append({
+			role: "user",
+			content,
+		});
+	};
 
 	return (
 		<div
@@ -73,23 +76,18 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 							icon={<LightbulbIcon />}
 							title="Inspiration"
 							description="Give me some ideas"
-							onClick={() => {
-								append({
-									role: "user",
-									content: "I'm looking for ideas! Got some?",
-								});
-							}}
+							onClick={() =>
+								handleSuggestionClick("I'm looking for ideas! Got some?")
+							}
 						/>
 						<SuggestionCard
 							icon={<MapPinIcon />}
 							title="Plan a trip"
 							description="Plan a trip for my team"
 							onClick={() => {
-								append({
-									role: "user",
-									content:
-										"I'm looking for a team-related trip. Got some ideas?",
-								});
+								handleSuggestionClick(
+									"I'm looking for a team-related trip. Got some ideas?",
+								);
 							}}
 						/>
 						<SuggestionCard
@@ -97,11 +95,9 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 							title="Plan an event"
 							description="Plan an event for my team"
 							onClick={() => {
-								append({
-									role: "user",
-									content:
-										"I'm looking for a team-related event. Got some ideas?",
-								});
+								handleSuggestionClick(
+									"I'm looking for a team-related event. Got some ideas?",
+								);
 							}}
 						/>
 					</aside>
@@ -118,6 +114,9 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 					{messages.map(({ id, content, role }) => (
 						<ChatMessage key={id} message={content} role={role} />
 					))}
+
+					<ThinkingBox isThinking={status === "streaming"} message="Thinking" />
+
 					<div
 						ref={messagesEndRef}
 						className={cn(

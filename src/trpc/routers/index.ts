@@ -1,11 +1,11 @@
 import { createCallerFactory } from "../lib/init";
 import { createTRPCRouter } from "../lib/procedures";
-import { conversationsRouter } from "./conversations";
+import { chatsRouter } from "./chats";
 import { usersRouter } from "./users";
 
 export const appRouter = createTRPCRouter({
 	users: usersRouter,
-	conversations: conversationsRouter,
+	chats: chatsRouter,
 });
 
 // export type definition of API
