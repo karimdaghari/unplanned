@@ -12,7 +12,12 @@ export const Messages = pgTable(
 	"messages",
 	{
 		...BaseColumns,
-		conversationUuid: uuid().notNull(),
+		conversationUuid: uuid()
+			.notNull()
+			.references(() => Conversations.uuid, {
+				onDelete: "cascade",
+				onUpdate: "cascade",
+			}),
 		id: text().notNull(),
 		role: text().notNull(),
 		content: text().notNull(),
@@ -23,9 +28,7 @@ export const Messages = pgTable(
 			columns: [t.conversationUuid],
 			foreignColumns: [Conversations.uuid],
 			name: "fk_messages_conversation_uuid",
-		})
-			.onDelete("cascade")
-			.onUpdate("cascade"),
+		}),
 	],
 );
 

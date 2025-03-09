@@ -1,5 +1,5 @@
 import { createClient } from "@/db/supabase/server";
-import { z } from "zod";
+import { updateUserSchema } from "@/shared/schemas/update-user";
 import {
 	authProcedure,
 	createTRPCRouter,
@@ -23,11 +23,7 @@ export const usersRouter = createTRPCRouter({
 		return ctx.user !== null;
 	}),
 	updateUser: authProcedure
-		.input(
-			z.object({
-				name: z.string().min(1),
-			}),
-		)
+		.input(updateUserSchema)
 		.mutation(async ({ input }) => {
 			const { name } = input;
 

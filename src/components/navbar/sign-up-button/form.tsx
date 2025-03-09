@@ -1,10 +1,10 @@
 "use client";
 
 import { signUpAction } from "@/auth/actions";
-import { signUpSchema } from "@/auth/schemas";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAppForm } from "@/hooks/forms";
 import { cn } from "@/lib/utils";
+import { signUpSchema } from "@/shared/schemas";
 import { useState } from "react";
 import { toast } from "sonner";
 

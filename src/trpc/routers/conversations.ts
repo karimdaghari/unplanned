@@ -1,19 +1,8 @@
-import { writeFile } from "node:fs/promises";
 import { Messages, MessagesInsert } from "@/db/models/messages";
-import { Conversations } from "@/db/schema";
+import { Conversations, ConversationsInsert } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import {
-	authProcedure,
-	createTRPCRouter,
-	publicProcedure,
-} from "../lib/procedures";
-
-const SaveConversationSchema = z.object({
-	message: MessagesInsert.omit({
-		conversationUuid: true,
-	}),
-});
+import { authProcedure, createTRPCRouter } from "../lib/procedures";
 
 export const conversationsRouter = createTRPCRouter({
 	getAllConversations: authProcedure.query(async ({ ctx: { db, user } }) => {
@@ -50,14 +39,16 @@ export const conversationsRouter = createTRPCRouter({
 				})
 				.where(eq(Conversations.uuid, input.uuid));
 		}),
-	saveConversation: publicProcedure
-		.input(SaveConversationSchema)
-		.mutation(async ({ input }) => {
-			await writeFile(
-				"./messages.json",
-				JSON.stringify(input, null, 2),
-				"utf-8",
-			);
+
+	createConversation: authProcedure
+		.input(ConversationsInsert)
+		.mutation(async ({ ctx: { db }, input }) => {
+			const [inserted] = await db
+				.insert(Conversations)
+				.values(input)
+				.returning();
+
+			return inserted;
 		}),
 	saveMessage: authProcedure
 		.input(

@@ -10,23 +10,22 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppForm } from "@/hooks/forms";
+import {
+	type UpdateUserSchema,
+	updateUserSchema,
+} from "@/shared/schemas/update-user";
 import { useTRPC } from "@/trpc/client/react";
-import { z } from "zod";
 
 interface SettingsDialogProps {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
-	initialName: string;
+	input: UpdateUserSchema;
 }
-
-const settingsSchema = z.object({
-	name: z.string().min(1, "Name is required"),
-});
 
 export function SettingsDialog({
 	isOpen,
 	onOpenChange,
-	initialName,
+	input,
 }: SettingsDialogProps) {
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
@@ -36,11 +35,9 @@ export function SettingsDialog({
 	);
 
 	const form = useAppForm({
-		defaultValues: {
-			name: initialName || "",
-		},
+		defaultValues: input,
 		validators: {
-			onSubmit: settingsSchema,
+			onSubmit: updateUserSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
@@ -88,11 +85,7 @@ export function SettingsDialog({
 							<form.AppField
 								name="name"
 								children={(field) => (
-									<field.TextField
-										label="Name"
-										placeholder="Your name"
-										description="This is how you'll appear to others"
-									/>
+									<field.TextField label="Name" placeholder="Your name" />
 								)}
 							/>
 							<form.SubmitButton>Update Settings</form.SubmitButton>

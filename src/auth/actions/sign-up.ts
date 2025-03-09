@@ -1,6 +1,6 @@
 "use server";
 
-import { signUpSchema } from "@/auth/schemas/sign-up";
+import { signUpSchema } from "@/shared/schemas";
 import { serverAction } from "@/trpc/lib/procedures";
 import { headers } from "next/headers";
 

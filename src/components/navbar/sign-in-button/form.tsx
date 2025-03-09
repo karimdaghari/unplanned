@@ -1,8 +1,8 @@
 "use client";
 
 import { signInAction } from "@/auth/actions";
-import { signInSchema } from "@/auth/schemas";
 import { useAppForm } from "@/hooks/forms";
+import { signInSchema } from "@/shared/schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

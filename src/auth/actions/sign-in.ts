@@ -1,6 +1,6 @@
 "use server";
 
-import { signInSchema } from "@/auth/schemas/sign-in";
+import { signInSchema } from "@/shared/schemas/sign-in";
 import { serverAction } from "@/trpc/lib/procedures";
 
 export const signInAction = serverAction

@@ -1,4 +1,5 @@
 import { createClient } from "@/db/supabase/server";
+import { api } from "@/trpc/client/server";
 import { openai } from "@ai-sdk/openai";
 import { type Message, streamText } from "ai";
 
@@ -6,6 +7,7 @@ import { type Message, streamText } from "ai";
 export const maxDuration = 30;
 
 interface RequestBody {
+	id: string;
 	messages: Message[];
 }
 
@@ -20,7 +22,13 @@ export async function POST(req: Request) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 
-	const { messages } = (await req.json()) as RequestBody;
+	const { id, messages } = (await req.json()) as RequestBody;
+
+	console.log({ messages });
+
+	const conversation = await api.conversations.getConversation({
+		uuid: id,
+	});
 
 	const result = streamText({
 		model: openai("gpt-4o-mini"),
@@ -58,5 +66,7 @@ export async function POST(req: Request) {
       `,
 	});
 
-	return result.toDataStreamResponse();
+	const res = result.toDataStreamResponse();
+
+	return res;
 }

@@ -27,14 +27,18 @@ export function SignInButton() {
 		setOpen(open);
 	};
 
-	const signIn = searchParams.get("open");
+	const openSearchParam = searchParams.get("open");
 
 	useEffect(() => {
-		if (signIn === "sign-in") {
+		if (openSearchParam === "sign-in") {
 			setOpen(true);
 			router.replace(pathname);
 		}
-	}, [signIn, pathname, router]);
+
+		if (openSearchParam === "sign-up") {
+			setOpen(false);
+		}
+	}, [openSearchParam, pathname, router]);
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
