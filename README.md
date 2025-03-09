@@ -75,10 +75,10 @@ Whether you're planning a team offsite, a corporate conference, or a virtual mee
    pnpm db:start
    ```
 
-6. Push the database schema
+6. Migrate the database schema
 
    ```bash
-   pnpm db:push
+   pnpm db:migrate
    ```
 
 7. Run the development server
