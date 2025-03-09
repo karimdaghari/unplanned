@@ -19,6 +19,8 @@ export function SignUpButton() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
+	const [loading, setLoading] = useState(false);
+
 	const [open, setOpen] = useState(false);
 
 	const openParam = searchParams.get("open");
@@ -36,8 +38,13 @@ export function SignUpButton() {
 
 	const signInHref = `${pathname}?open=sign-in`;
 
+	const handleOpenChange = (open: boolean) => {
+		if (loading) return;
+		setOpen(open);
+	};
+
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
 				<Button size="sm">
 					<UserIcon />
@@ -59,7 +66,7 @@ export function SignUpButton() {
 					</DialogDescription>
 				</DialogHeader>
 
-				<SignUpForm />
+				<SignUpForm setLoading={setLoading} />
 			</DialogContent>
 		</Dialog>
 	);

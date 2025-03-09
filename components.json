@@ -3,9 +3,10 @@
 	"style": "new-york",
 	"rsc": true,
 	"tsx": true,
+	"iconLibrary": "lucide",
 	"tailwind": {
 		"config": "tailwind.config.ts",
-		"css": "app/globals.css",
+		"css": "src/app/styles/globals.css",
 		"baseColor": "neutral",
 		"cssVariables": true,
 		"prefix": ""

@@ -1,15 +1,13 @@
 "use server";
 
-import { signUpSchema } from "@/auth/schemas/sign-up";
-import { createClient } from "@/db/supabase/server";
+import { signUpSchema } from "@/shared/schemas";
 import { serverAction } from "@/trpc/lib/procedures";
 import { headers } from "next/headers";
 
 export const signUpAction = serverAction
 	.meta({ span: "signUpAction" })
 	.input(signUpSchema)
-	.mutation(async ({ input: { email, password } }) => {
-		const supabase = await createClient();
+	.mutation(async ({ ctx: { supabase }, input: { email, password, name } }) => {
 		const origin = (await headers()).get("origin");
 
 		const emailRedirectTo = `${origin}/auth/callback`;
@@ -19,6 +17,9 @@ export const signUpAction = serverAction
 			password,
 			options: {
 				emailRedirectTo: emailRedirectTo,
+				data: {
+					name,
+				},
 			},
 		});
 

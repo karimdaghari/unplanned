@@ -10,8 +10,8 @@ if (!process.env.DATABASE_URL) {
 
 // biome-ignore lint/style/noDefaultExport: This is a drizzle config file, it's ok to have a default export
 export default defineConfig({
-	schema: "./src/schema.ts",
-	out: "./migrations",
+	schema: "./src/db/schema.ts",
+	out: "./src/db/migrations",
 	dialect: "postgresql",
 	dbCredentials: {
 		url: process.env.DATABASE_URL ?? "",

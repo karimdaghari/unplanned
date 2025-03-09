@@ -4,7 +4,6 @@ import { TRPCReactProvider } from "@/trpc/client/react";
 import { ThemeProvider } from "next-themes";
 import { Geist } from "next/font/google";
 import { Toaster } from "sonner";
-import { Navbar } from "../components/navbar";
 
 const defaultUrl = env.VERCEL_URL
 	? `https://${env.VERCEL_URL}`
@@ -12,8 +11,8 @@ const defaultUrl = env.VERCEL_URL
 
 export const metadata = {
 	metadataBase: new URL(defaultUrl),
-	title: "Next.js and Supabase Starter Kit",
-	description: "The fastest way to build apps with Next.js and Supabase",
+	title: "Unplanned",
+	description: "The fastest way to plan your next team trip",
 };
 
 const geistSans = Geist({
@@ -28,20 +27,15 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className={geistSans.className} suppressHydrationWarning>
-			<body className="bg-background text-foreground">
+			<body className="bg-accent text-foreground">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Toaster richColors position="bottom-right" />
-					<TRPCReactProvider>
-						<main className="h-screen p-4 gap-4 flex flex-col">
-							<Navbar />
-							{children}
-						</main>
-					</TRPCReactProvider>
+					<Toaster richColors position="bottom-center" />
+					<TRPCReactProvider>{children}</TRPCReactProvider>
 				</ThemeProvider>
 			</body>
 		</html>

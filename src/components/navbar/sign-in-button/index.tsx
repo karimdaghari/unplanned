@@ -18,19 +18,30 @@ export function SignInButton() {
 	const pathname = usePathname();
 	const router = useRouter();
 
+	const [loading, setLoading] = useState(false);
+
 	const [open, setOpen] = useState(false);
 
-	const signIn = searchParams.get("open");
+	const handleOpenChange = (open: boolean) => {
+		if (loading) return;
+		setOpen(open);
+	};
+
+	const openSearchParam = searchParams.get("open");
 
 	useEffect(() => {
-		if (signIn === "sign-in") {
+		if (openSearchParam === "sign-in") {
 			setOpen(true);
 			router.replace(pathname);
 		}
-	}, [signIn, pathname, router]);
+
+		if (openSearchParam === "sign-up") {
+			setOpen(false);
+		}
+	}, [openSearchParam, pathname, router]);
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
 				<Button variant="outline" size="sm">
 					<UserCircle2 />
@@ -52,7 +63,7 @@ export function SignInButton() {
 					</DialogDescription>
 				</DialogHeader>
 
-				<SignInForm />
+				<SignInForm setLoading={setLoading} />
 			</DialogContent>
 		</Dialog>
 	);
