@@ -1,104 +1,111 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+<h1 align="center">Unplanned</h1>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ AI-powered event planning assistant built with Next.js, tRPC, and the Vercel AI SDK
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
+  <a href="#local-development"><strong>Local Development</strong></a> ·
+  <a href="#deployment"><strong>Deployment</strong></a>
 </p>
 <br/>
 
+## About
+
+Unplanned is a conversational AI assistant for event planning, helping users brainstorm and schedule corporate event ideas. The application uses AI to generate creative event concepts and suggests venues for different types of events.
+
+Whether you're planning a team offsite, a corporate conference, or a virtual meeting, Unplanned helps you explore options, find inspiration, and save your ideas.
+
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- **AI-Powered Event Ideation**: Get creative event ideas based on your input
+- **Venue Suggestions**: Discover potential venues for your events
+- **User Authentication**: Save your event plans and access them later
+- **Conversational Interface**: Natural chat-based interaction with the AI assistant
+- **Suggested Prompts**: Quick-start your planning with prepared suggestions
 
-## Demo
+## Tech Stack
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+- **Framework**: [Next.js 15](https://nextjs.org) with App Router
+- **AI**: [Vercel AI SDK](https://sdk.vercel.ai/docs) with OpenAI integration
+- **Database**: [Supabase](https://supabase.com) with PostgreSQL
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team)
+- **API**: [tRPC](https://trpc.io) for type-safe API calls
+- **State Management**: [TanStack Query](https://tanstack.com/query)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com) with shadcn/ui components
+- **Authentication**: Supabase Auth for user management
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) primitives
 
-## Deploy to Vercel
+## Local Development
 
-Vercel deployment will guide you through creating a Supabase account and project.
+### Prerequisites
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+- Node.js (v20 or later)
+- pnpm (v10 or later)
+- Docker (for local database)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+### Setup
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
-
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
+1. Clone the repository
 
    ```bash
-   npx create-next-app --example with-supabase with-supabase-app
+   git clone https://github.com/karimdaghari/unplanned.git
+   cd unplanned
    ```
+
+2. Install dependencies
 
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   pnpm install
    ```
+
+3. Copy the example environment file and update with your credentials
 
    ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
+   cp .env.example .env
    ```
 
-3. Use `cd` to change into the app's directory
+4. Update `.env` with your Supabase and OpenAI API credentials
+
+5. Start the development database
 
    ```bash
-   cd with-supabase-app
+   pnpm db:start
    ```
 
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-
-5. You can now run the Next.js local development server:
+6. Push the database schema
 
    ```bash
-   npm run dev
+   pnpm db:push
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+7. Run the development server
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+   ```bash
+   pnpm dev
+   ```
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+8. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Feedback and issues
+## Database
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+The project uses PostgreSQL via Supabase for data storage. The local development setup uses Docker to run PostgreSQL.
 
-## More Supabase examples
+## Deployment
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+### Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkarimdaghari%2Funplanned)
+
+### Environment Variables
+
+For deployment, you'll need to set the following environment variables:
+
+- `SUPABASE_URL`: Your Supabase project URL
+- `SUPABASE_ANON_KEY`: Your Supabase anonymous key
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `DATABASE_URL`: Your PostgreSQL connection string
