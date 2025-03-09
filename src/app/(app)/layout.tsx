@@ -4,7 +4,7 @@ export default function AppLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="mx-auto max-w-3xl w-full flex flex-col justify-center h-full">
+		<div className="mx-auto w-full flex flex-col justify-center h-full">
 			{children}
 		</div>
 	);
