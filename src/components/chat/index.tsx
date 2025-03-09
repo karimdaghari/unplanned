@@ -107,6 +107,7 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 									"I'm looking for a team-related event. Got some ideas?",
 								);
 							}}
+							comingSoon
 						/>
 					</aside>
 				</div>
