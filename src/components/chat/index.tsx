@@ -90,11 +90,11 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 						/>
 						<SuggestionCard
 							icon={<MapPinIcon />}
-							title="Plan a trip"
-							description="Plan a trip for my team"
+							title="Pick a venue"
+							description="Pick a venue for my team"
 							onClick={() => {
 								handleSuggestionClick(
-									"I'm looking for a team-related trip. Got some ideas?",
+									"I'm looking to pick a venue for my team. Suggest me some venues.",
 								);
 							}}
 						/>
@@ -119,8 +119,8 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 				)}
 			>
 				<div className="flex flex-col gap-4 max-w-3xl w-full mx-auto">
-					{messages.map(({ id, content, role }) => (
-						<ChatMessage key={id} message={content} role={role} />
+					{messages.map((message) => (
+						<ChatMessage key={message.id} {...message} />
 					))}
 
 					<ThinkingBox isThinking={status === "streaming"} message="Thinking" />

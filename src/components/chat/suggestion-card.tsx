@@ -1,4 +1,4 @@
-import { ForwardIcon } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Typography } from "../typography";
 
 interface SuggestionCardProps {
@@ -27,7 +27,7 @@ export function SuggestionCard({
 					<Typography variant="muted">{description}</Typography>
 				</div>
 			</div>
-			<ForwardIcon className="absolute right-4 top-1/4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity" />
+			<ArrowUpRight className="absolute right-4 top-1/4 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity" />
 		</button>
 	);
 }

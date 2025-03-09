@@ -1,5 +1,6 @@
+import { generateChatTitle, systemPrompt } from "@/ai/lib";
+import { tools } from "@/ai/tools";
 import { createClient } from "@/db/supabase/server";
-import { generateChatTitle, systemPrompt } from "@/lib/ai";
 import { api } from "@/trpc/client/server";
 import { openai } from "@ai-sdk/openai";
 import { type Message, createDataStreamResponse, smoothStream } from "ai";
@@ -191,6 +192,8 @@ export async function POST(req: Request) {
 				system: systemPrompt,
 				experimental_transform: smoothStream({ chunking: "word" }),
 				experimental_generateMessageId: nanoid,
+				maxSteps: 1,
+				tools: tools,
 				onFinish: async ({ response }) => {
 					const messages = response.messages;
 					try {
