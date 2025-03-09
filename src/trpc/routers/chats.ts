@@ -36,13 +36,6 @@ export const chatsRouter = createTRPCRouter({
 						),
 				});
 
-				if (!chat) {
-					throw new TRPCError({
-						code: "NOT_FOUND",
-						message: `Chat with ID ${input.id} not found`,
-					});
-				}
-
 				return chat;
 			} catch (error) {
 				console.error(`Error fetching chat with ID ${input.id}:`, error);
