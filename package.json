@@ -4,7 +4,7 @@
 	"scripts": {
 		"predev": "pnpm db:start",
 		"dev": "next dev --turbo",
-		"build": "next build",
+		"build": "next build && pnpm db:migrate",
 		"start": "next start",
 		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
@@ -81,10 +81,6 @@
 	},
 	"packageManager": "pnpm@10.6.1+sha512.40ee09af407fa9fbb5fbfb8e1cb40fbb74c0af0c3e10e9224d7b53c7658528615b2c92450e74cfad91e3a2dcafe3ce4050d80bda71d757756d2ce2b66213e9a3",
 	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@biomejs/biome",
-			"esbuild",
-			"sharp"
-		]
+		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "sharp"]
 	}
 }
