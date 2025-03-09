@@ -18,6 +18,8 @@ Unplanned is a conversational AI assistant for event planning, helping users bra
 
 Whether you're planning a team offsite, a corporate conference, or a virtual meeting, Unplanned helps you explore options, find inspiration, and save your ideas.
 
+_P.S.: Whipped up in a weekend, it’s more about speed and potential than perfection. Think of it as a POC, for people who value action > words._
+
 ## Features
 
 - **AI-Powered Event Ideation**: Get creative event ideas based on your input
@@ -30,13 +32,11 @@ Whether you're planning a team offsite, a corporate conference, or a virtual mee
 
 - **Framework**: [Next.js 15](https://nextjs.org) with App Router
 - **AI**: [Vercel AI SDK](https://sdk.vercel.ai/docs) with OpenAI integration
-- **Database**: [Supabase](https://supabase.com) with PostgreSQL
+- **Database/Authentication**: [Supabase](https://supabase.com) with PostgreSQL
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team)
 - **API**: [tRPC](https://trpc.io) for type-safe API calls
 - **State Management**: [TanStack Query](https://tanstack.com/query)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) with shadcn/ui components
-- **Authentication**: Supabase Auth for user management
-- **UI Components**: [Radix UI](https://www.radix-ui.com/) primitives
+- **UI Components/Styling**: [Shadcn UI](https://ui.shadcn.com/): Radix primitive + [Tailwind CSS](https://tailwindcss.com) v4
 
 ## Local Development
 
