@@ -1,5 +1,5 @@
 import { createClient } from "@/db/supabase/server";
-import { systemPrompt } from "@/lib/ai";
+import { generateChatTitle, systemPrompt } from "@/lib/ai";
 import { api } from "@/trpc/client/server";
 import { openai } from "@ai-sdk/openai";
 import { type Message, createDataStreamResponse, smoothStream } from "ai";
@@ -34,8 +34,16 @@ export async function POST(req: Request) {
 	let chatId = chat?.id;
 
 	if (!chatId) {
+		const firstMessage = messages[0];
+
+		if (!firstMessage) {
+			return new Response("No messages", { status: 400 });
+		}
+
+		const title = await generateChatTitle(firstMessage);
+
 		const newChat = await api.chats.create({
-			title: "New conversation",
+			title,
 			id,
 		});
 
@@ -45,8 +53,6 @@ export async function POST(req: Request) {
 	if (!chatId) {
 		return new Response("Chat not found", { status: 404 });
 	}
-
-	console.log({ messages });
 
 	await api.chats.saveMessage({
 		chatId,

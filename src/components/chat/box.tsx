@@ -45,7 +45,7 @@ export function ChatBox({
 				onSubmit={onSubmit}
 			>
 				<Textarea
-					className="h-10 overflow-hidden rounded-3xl border-0 focus-visible:ring-0 resize-none shadow-none"
+					className="h-8 overflow-hidden rounded-3xl border-0 focus-visible:ring-0 resize-none shadow-none"
 					placeholder="Start planning your next event/travel..."
 					value={value}
 					onChange={onChange}

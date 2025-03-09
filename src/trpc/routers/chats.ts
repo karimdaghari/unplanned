@@ -8,7 +8,7 @@ export const chatsRouter = createTRPCRouter({
 	getAll: authProcedure.query(async ({ ctx: { db, user } }) => {
 		return await db.query.Chats.findMany({
 			where: (t, op) =>
-				op.and(op.isNotNull(t.deletedAt), op.eq(t.userId, user.id)),
+				op.and(op.isNull(t.deletedAt), op.eq(t.userId, user.id)),
 			orderBy: (t, op) => [op.desc(t.createdAt)],
 		});
 	}),
@@ -34,14 +34,14 @@ export const chatsRouter = createTRPCRouter({
 			});
 		}),
 	delete: authProcedure
-		.input(z.object({ uuid: z.string().nanoid() }))
+		.input(z.object({ id: z.string().nanoid() }))
 		.mutation(async ({ ctx: { db }, input }) => {
 			await db
 				.update(Chats)
 				.set({
 					deletedAt: new Date(),
 				})
-				.where(eq(Chats.id, input.uuid));
+				.where(eq(Chats.id, input.id));
 		}),
 
 	create: authProcedure.input(ChatsInsert.omit({ userId: true })).mutation(

@@ -2,12 +2,11 @@
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client/react";
 import { type Message, useChat } from "@ai-sdk/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarIcon, LightbulbIcon, MapPinIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { ScrollArea } from "../ui/scroll-area";
 import { ChatBox } from "./box";
 import { ChatFooter } from "./footer";
 import { ChatHeader } from "./header";
@@ -22,6 +21,7 @@ interface ChatProps {
 
 export function Chat({ id: chatId, initialMessages }: ChatProps) {
 	const trpc = useTRPC();
+	const queryClient = useQueryClient();
 
 	const { data: isLoggedIn } = useQuery(trpc.users.isLoggedIn.queryOptions());
 
@@ -40,6 +40,11 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 		initialMessages,
 		sendExtraMessageFields: true,
 		generateId: nanoid,
+		onFinish: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: trpc.chats.getAll.queryKey(),
+			});
+		},
 	});
 
 	const scrollToBottom = useCallback(() => {
@@ -66,12 +71,15 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 
 	return (
 		<div
-			className={`flex flex-col h-[90dvh] w-full ${messages.length ? "justify-end" : "justify-center"}`}
+			className={cn(
+				"flex flex-col h-[90dvh] w-full",
+				messages.length ? "justify-end" : "justify-center",
+			)}
 		>
 			{!messages.length && (
 				<div className="flex flex-col gap-4 max-w-3xl w-full mx-auto">
 					<ChatHeader />
-					<aside className="grid grid-cols-3 gap-2">
+					<aside className="grid lg:grid-cols-3 gap-2">
 						<SuggestionCard
 							icon={<LightbulbIcon />}
 							title="Inspiration"
@@ -104,9 +112,9 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 				</div>
 			)}
 
-			<ScrollArea
+			<div
 				className={cn(
-					"flex-grow overflow-auto p-3 pl-0 rounded-lg",
+					"flex-grow overflow-auto overscroll-contain p-3 pl-0 rounded-lg",
 					messages.length === 0 && "hidden",
 				)}
 			>
@@ -125,8 +133,8 @@ export function Chat({ id: chatId, initialMessages }: ChatProps) {
 						)}
 					/>
 				</div>
-			</ScrollArea>
-			<div className="sticky bottom-4 space-y-2 pt-4 bg-background w-full max-w-3xl mx-auto">
+			</div>
+			<div className="sticky bottom-8 space-y-2 pt-4 bg-background w-full max-w-3xl mx-auto">
 				<ChatBox
 					onSubmit={handleSubmit}
 					onChange={handleInputChange}
