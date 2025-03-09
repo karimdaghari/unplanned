@@ -1,11 +1,26 @@
+import { createClient } from "@/db/supabase/server";
 import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { type Message, streamText } from "ai";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+interface RequestBody {
+	messages: Message[];
+}
+
 export async function POST(req: Request) {
-	const { messages } = await req.json();
+	const supabase = await createClient();
+
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	if (!user) {
+		return new Response("Unauthorized", { status: 401 });
+	}
+
+	const { messages } = (await req.json()) as RequestBody;
 
 	const result = streamText({
 		model: openai("gpt-4o-mini"),
