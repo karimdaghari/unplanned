@@ -2,7 +2,6 @@
 
 import { signInSchema } from "@/auth/schemas/sign-in";
 import { createClient } from "@/db/supabase/server";
-import { encodedRedirect } from "@/db/supabase/utils";
 import { serverAction } from "@/trpc/lib/procedures";
 
 export const signInAction = serverAction
@@ -17,6 +16,14 @@ export const signInAction = serverAction
 		});
 
 		if (error) {
-			return encodedRedirect("error", "/sign-in", error.message);
+			return {
+				success: false,
+				message: error.message,
+			};
 		}
+
+		return {
+			success: true,
+			message: "You're in!",
+		};
 	});

@@ -28,8 +28,16 @@ export function Chat() {
 		stop,
 		append,
 	} = useChat({
-		onFinish(message) {
-			saveConversation.mutate(message);
+		onFinish({ content, parts, id, role, createdAt }) {
+			saveConversation.mutate({
+				message: {
+					content,
+					id,
+					createdAt,
+					role,
+					parts,
+				},
+			});
 		},
 	});
 

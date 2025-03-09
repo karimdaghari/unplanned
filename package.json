@@ -2,6 +2,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"predev": "pnpm db:start",
 		"dev": "next dev --turbo",
 		"build": "next build",
 		"start": "next start",
@@ -9,9 +10,11 @@
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
 		"lint": "pnpm biome check --write",
 		"ui:add": "pnpm dlx shadcn@latest add",
-		"db:kit": "pnpm with-env drizzle-kit",
+		"db:start": "docker compose -f src/db/compose.yml up -d --build",
+		"db:kit": "pnpm with-env drizzle-kit --config src/db/drizzle.config.ts",
 		"db:push": "pnpm db:kit push",
 		"db:generate": "pnpm db:kit generate",
+		"db:drop": "pnpm db:kit drop",
 		"db:migrate": "pnpm db:kit migrate",
 		"db:studio": "pnpm db:kit studio",
 		"with-env": "pnpm dotenv -e .env --"
@@ -73,10 +76,6 @@
 	},
 	"packageManager": "pnpm@10.6.1+sha512.40ee09af407fa9fbb5fbfb8e1cb40fbb74c0af0c3e10e9224d7b53c7658528615b2c92450e74cfad91e3a2dcafe3ce4050d80bda71d757756d2ce2b66213e9a3",
 	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@biomejs/biome",
-			"esbuild",
-			"sharp"
-		]
+		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "sharp"]
 	}
 }

@@ -3,9 +3,20 @@
 import { signInAction } from "@/auth/actions";
 import { signInSchema } from "@/auth/schemas";
 import { useAppForm } from "@/hooks/forms";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function SignInForm() {
+interface Props {
+	/**
+	 * This is used to prevent the modal from being accidentally closed
+	 * while the action is loading.
+	 */
+	setLoading: (loading: boolean) => void;
+}
+
+export function SignInForm({ setLoading }: Props) {
+	const queryClient = useQueryClient();
+
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
@@ -16,21 +27,23 @@ export function SignInForm() {
 		},
 		onSubmit: async ({ value }) => {
 			try {
-				await signInAction(value);
-				// If we get here, it means there was no redirect, which is unexpected
-				// Let's show a generic success message
-				toast.success("Signed in successfully");
-			} catch (error) {
-				// Handle different types of errors
-				if (typeof error === "object" && error !== null && "message" in error) {
-					toast.error("Sign in failed", {
-						description: error.message as string,
-					});
+				setLoading(true);
+				const { success, message } = await signInAction(value);
+
+				if (success) {
+					toast.success("Signed in successfully");
+					await queryClient.invalidateQueries();
 				} else {
-					toast.error("Something went seriously wrong", {
-						description: "If the issue persists contact Karim!",
+					toast.error("Sign in failed", {
+						description: message,
 					});
 				}
+			} catch {
+				toast.error("Something went seriously wrong", {
+					description: "If the issue persists contact Karim!",
+				});
+			} finally {
+				setLoading(false);
 			}
 		},
 	});

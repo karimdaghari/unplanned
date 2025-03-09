@@ -35,7 +35,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Toaster richColors position="bottom-right" />
+					<Toaster richColors position="bottom-center" />
 					<TRPCReactProvider>
 						<main className="h-screen p-4 gap-4 flex flex-col">
 							<Navbar />

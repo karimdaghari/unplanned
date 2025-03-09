@@ -8,7 +8,7 @@ import { headers } from "next/headers";
 export const signUpAction = serverAction
 	.meta({ span: "signUpAction" })
 	.input(signUpSchema)
-	.mutation(async ({ input: { email, password } }) => {
+	.mutation(async ({ input: { email, password, name } }) => {
 		const supabase = await createClient();
 		const origin = (await headers()).get("origin");
 
@@ -19,6 +19,9 @@ export const signUpAction = serverAction
 			password,
 			options: {
 				emailRedirectTo: emailRedirectTo,
+				data: {
+					name,
+				},
 			},
 		});
 

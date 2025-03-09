@@ -31,7 +31,10 @@ export function ChatBox({
 
 	return (
 		<div className="max-w-3xl w-full mx-auto">
-			<form className="border rounded-3xl p-4 bg-card" onSubmit={onSubmit}>
+			<form
+				className="border rounded-3xl p-4 bg-card transition-colors focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary/50"
+				onSubmit={onSubmit}
+			>
 				<Textarea
 					className="h-10 overflow-hidden rounded-3xl border-0 focus-visible:ring-0 resize-none shadow-none"
 					placeholder="Start planning your next event/travel..."

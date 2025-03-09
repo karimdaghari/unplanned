@@ -17,7 +17,7 @@ export function SuggestionCard({
 	return (
 		<button
 			type="button"
-			className="py-3 px-4 rounded-xl border bg-card relative group [&_svg]:text-muted-foreground [&_svg]:size-4 hover:-translate-y-0.5 transition-transform hover:shadow-md duration-300 ease-in-out"
+			className="py-3 px-4 rounded-xl border bg-card relative group [&_svg]:text-muted-foreground [&_svg]:size-4 hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
 			onClick={onClick}
 		>
 			<div className="flex flex-col gap-2 items-start">

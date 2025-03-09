@@ -18,7 +18,14 @@ export function SignInButton() {
 	const pathname = usePathname();
 	const router = useRouter();
 
+	const [loading, setLoading] = useState(false);
+
 	const [open, setOpen] = useState(false);
+
+	const handleOpenChange = (open: boolean) => {
+		if (loading) return;
+		setOpen(open);
+	};
 
 	const signIn = searchParams.get("open");
 
@@ -30,7 +37,7 @@ export function SignInButton() {
 	}, [signIn, pathname, router]);
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
 				<Button variant="outline" size="sm">
 					<UserCircle2 />
@@ -52,7 +59,7 @@ export function SignInButton() {
 					</DialogDescription>
 				</DialogHeader>
 
-				<SignInForm />
+				<SignInForm setLoading={setLoading} />
 			</DialogContent>
 		</Dialog>
 	);
