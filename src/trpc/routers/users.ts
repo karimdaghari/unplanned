@@ -19,12 +19,8 @@ export const usersRouter = createTRPCRouter({
 			avatar,
 		};
 	}),
-	getUserName: publicProcedure.query(({ ctx }) => {
-		const user = ctx.user;
-
-		const name = user?.user_metadata.name as string | undefined;
-
-		return { name };
+	isLoggedIn: publicProcedure.query(({ ctx }) => {
+		return ctx.user !== null;
 	}),
 	updateUser: authProcedure
 		.input(

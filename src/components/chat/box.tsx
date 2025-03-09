@@ -1,4 +1,7 @@
+import { useTRPC } from "@/trpc/client/react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowUp, SquareIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import type { KeyboardEvent } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
@@ -18,6 +21,12 @@ export function ChatBox({
 	isLoading,
 	stop,
 }: ChatBoxProps) {
+	const trpc = useTRPC();
+
+	const router = useRouter();
+
+	const { data: isLoggedIn } = useQuery(trpc.users.isLoggedIn.queryOptions());
+
 	const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
 		// Check for Cmd/Ctrl + Enter
 		if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
@@ -41,6 +50,11 @@ export function ChatBox({
 					value={value}
 					onChange={onChange}
 					onKeyDown={handleKeyDown}
+					onFocus={() => {
+						if (!isLoggedIn) {
+							router.push("/?open=sign-in");
+						}
+					}}
 				/>
 				<div className="w-full flex items-center justify-end">
 					<div>

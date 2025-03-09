@@ -2,7 +2,7 @@
 import { signOutAction } from "@/auth/actions";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { useTRPC } from "@/trpc/client/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { LogOut, Settings } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -19,16 +19,13 @@ import { Skeleton } from "../ui/skeleton";
 
 export function UserMenu() {
 	const trpc = useTRPC();
-	const queryClient = useQueryClient();
+
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
 	const { data: user, isLoading } = useQuery(trpc.users.getUser.queryOptions());
 
 	const handleSignOut = async () => {
 		await signOutAction();
-		await queryClient.invalidateQueries({
-			type: "all",
-		});
 	};
 
 	if (isLoading) return <Skeleton className="size-8 rounded-full" />;
