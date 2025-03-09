@@ -9,6 +9,7 @@ export const chatsRouter = createTRPCRouter({
 		return await db.query.Chats.findMany({
 			where: (t, op) =>
 				op.and(op.isNotNull(t.deletedAt), op.eq(t.userId, user.id)),
+			orderBy: (t, op) => [op.desc(t.createdAt)],
 		});
 	}),
 	getById: authProcedure
@@ -22,6 +23,14 @@ export const chatsRouter = createTRPCRouter({
 						// Although this might seem redundant, it's a sanity check to ensure that the user is not accessing a conversation that they do not own
 						op.eq(t.userId, user.id),
 					),
+			});
+		}),
+	getMessagesById: authProcedure
+		.input(z.object({ id: z.string().nanoid() }))
+		.query(async ({ ctx: { db }, input }) => {
+			return await db.query.Messages.findMany({
+				where: eq(Messages.chatId, input.id),
+				orderBy: (t, op) => [op.asc(t.createdAt)],
 			});
 		}),
 	delete: authProcedure
