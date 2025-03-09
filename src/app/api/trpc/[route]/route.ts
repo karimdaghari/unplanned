@@ -2,7 +2,7 @@ import { appRouter, createTRPCContext } from "@/trpc/lib/utils";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import type { NextRequest } from "next/server";
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
