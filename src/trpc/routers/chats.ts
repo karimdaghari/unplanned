@@ -1,47 +1,116 @@
 import { Messages, MessagesInsert } from "@/db/models/messages";
 import { Chats, ChatsInsert } from "@/db/schema";
+import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { authProcedure, createTRPCRouter } from "../lib/procedures";
 
 export const chatsRouter = createTRPCRouter({
 	getAll: authProcedure.query(async ({ ctx: { db, user } }) => {
-		return await db.query.Chats.findMany({
-			where: (t, op) =>
-				op.and(op.isNull(t.deletedAt), op.eq(t.userId, user.id)),
-			orderBy: (t, op) => [op.desc(t.createdAt)],
-		});
+		try {
+			return await db.query.Chats.findMany({
+				where: (t, op) =>
+					op.and(op.isNull(t.deletedAt), op.eq(t.userId, user.id)),
+				orderBy: (t, op) => [op.desc(t.createdAt)],
+			});
+		} catch (error) {
+			console.error("Error fetching all chats:", error);
+			throw new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: "Failed to retrieve chats",
+				cause: error,
+			});
+		}
 	}),
 	getById: authProcedure
 		.input(z.object({ id: z.string().nanoid() }))
 		.query(async ({ ctx: { db, user }, input }) => {
-			return await db.query.Chats.findFirst({
-				where: (t, op) =>
-					op.and(
-						op.isNull(t.deletedAt),
-						op.eq(t.id, input.id),
-						// Although this might seem redundant, it's a sanity check to ensure that the user is not accessing a conversation that they do not own
-						op.eq(t.userId, user.id),
-					),
-			});
+			try {
+				const chat = await db.query.Chats.findFirst({
+					where: (t, op) =>
+						op.and(
+							op.isNull(t.deletedAt),
+							op.eq(t.id, input.id),
+							// Although this might seem redundant, it's a sanity check to ensure that the user is not accessing a conversation that they do not own
+							op.eq(t.userId, user.id),
+						),
+				});
+
+				if (!chat) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: `Chat with ID ${input.id} not found or you don't have access to it`,
+					});
+				}
+
+				return chat;
+			} catch (error) {
+				console.error(`Error fetching chat with ID ${input.id}:`, error);
+
+				// If it's already a TRPCError, just rethrow it
+				if (error instanceof TRPCError) {
+					throw error;
+				}
+
+				// For database connection errors or other database-related issues
+				if (error instanceof Error && error.message.includes("database")) {
+					throw new TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: "Database error occurred while retrieving chat",
+						cause: error,
+					});
+				}
+
+				// For any other unexpected errors
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "An unexpected error occurred while retrieving the chat",
+					cause: error,
+				});
+			}
 		}),
 	getMessagesById: authProcedure
 		.input(z.object({ id: z.string().nanoid() }))
 		.query(async ({ ctx: { db }, input }) => {
-			return await db.query.Messages.findMany({
-				where: eq(Messages.chatId, input.id),
-				orderBy: (t, op) => [op.asc(t.createdAt)],
-			});
+			try {
+				const messages = await db.query.Messages.findMany({
+					where: eq(Messages.chatId, input.id),
+					orderBy: (t, op) => [op.asc(t.createdAt)],
+				});
+
+				return messages.map((message) => ({
+					...message,
+					createdAt: new Date(message.createdAt),
+				}));
+			} catch (error) {
+				console.error(`Error fetching messages for chat ${input.id}:`, error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to retrieve chat messages",
+					cause: error,
+				});
+			}
 		}),
 	delete: authProcedure
 		.input(z.object({ id: z.string().nanoid() }))
 		.mutation(async ({ ctx: { db }, input }) => {
-			await db
-				.update(Chats)
-				.set({
-					deletedAt: new Date(),
-				})
-				.where(eq(Chats.id, input.id));
+			try {
+				await db
+					.update(Chats)
+					.set({
+						deletedAt: new Date(),
+					})
+					.where(eq(Chats.id, input.id));
+
+				return { success: true, message: "Chat deleted successfully" };
+			} catch (error) {
+				console.error(`Error deleting chat ${input.id}:`, error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to delete chat",
+					cause: error,
+				});
+			}
 		}),
 
 	create: authProcedure.input(ChatsInsert.omit({ userId: true })).mutation(
@@ -52,15 +121,24 @@ export const chatsRouter = createTRPCRouter({
 			},
 			input,
 		}) => {
-			const [inserted] = await db
-				.insert(Chats)
-				.values({
-					...input,
-					userId,
-				})
-				.returning();
+			try {
+				const [inserted] = await db
+					.insert(Chats)
+					.values({
+						...input,
+						userId,
+					})
+					.returning();
 
-			return inserted;
+				return inserted;
+			} catch (error) {
+				console.error("Error creating chat:", error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to create chat",
+					cause: error,
+				});
+			}
 		},
 	),
 	saveMessage: authProcedure
@@ -71,20 +149,31 @@ export const chatsRouter = createTRPCRouter({
 			}),
 		)
 		.mutation(async ({ ctx: { db }, input }) => {
-			await db
-				.insert(Messages)
-				.values(
-					input.messages.map((message) => ({
-						...message,
-						chatId: input.chatId,
-						createdAt: message.createdAt ?? new Date().toISOString(),
-					})),
-				)
-				// On conflict, update the message with the new content and keep the same id
-				// This allows us to ensure the message is always up to date (and for the future, allow for partial updates, i.e., edit the content of a message)
-				.onConflictDoUpdate({
-					target: [Messages.id],
-					set: { ...input, id: sql`${Messages.id}` },
+			try {
+				await db
+					.insert(Messages)
+					.values(
+						input.messages.map((message) => ({
+							...message,
+							chatId: input.chatId,
+							createdAt: message.createdAt ?? new Date().toISOString(),
+						})),
+					)
+					// On conflict, update the message with the new content and keep the same id
+					// This allows us to ensure the message is always up to date (and for the future, allow for partial updates, i.e., edit the content of a message)
+					.onConflictDoUpdate({
+						target: [Messages.id],
+						set: { ...input, id: sql`${Messages.id}` },
+					});
+
+				return { success: true, message: "Messages saved successfully" };
+			} catch (error) {
+				console.error(`Error saving messages for chat ${input.chatId}:`, error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to save chat messages",
+					cause: error,
 				});
+			}
 		}),
 });

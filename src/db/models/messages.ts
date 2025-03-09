@@ -28,7 +28,7 @@ export const Messages = pgTable("messages", {
 	role: varchar("role", {
 		length: 20,
 	}).notNull(),
-	content: json().notNull(),
+	content: json().$type<string>().notNull(),
 	parts: jsonb().$type<MessagesParts[]>(),
 });
 
@@ -37,4 +37,5 @@ export type MessagesSelect = typeof Messages.$inferSelect;
 export const MessagesInsert = createInsertSchema(Messages, {
 	parts: MessagesPartsSchema.array().nullish(),
 	createdAt: z.string().datetime().nullish(),
+	content: z.string(),
 });
