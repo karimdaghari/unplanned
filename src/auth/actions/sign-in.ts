@@ -1,15 +1,12 @@
 "use server";
 
 import { signInSchema } from "@/auth/schemas/sign-in";
-import { createClient } from "@/db/supabase/server";
 import { serverAction } from "@/trpc/lib/procedures";
 
 export const signInAction = serverAction
 	.meta({ span: "signInAction" })
 	.input(signInSchema)
-	.mutation(async ({ input: { email, password } }) => {
-		const supabase = await createClient();
-
+	.mutation(async ({ ctx: { supabase }, input: { email, password } }) => {
 		const { error } = await supabase.auth.signInWithPassword({
 			email,
 			password,

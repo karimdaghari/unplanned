@@ -1,5 +1,5 @@
 import { writeFile } from "node:fs/promises";
-import { MessagesInsert } from "@/db/models/messages";
+import { Messages, MessagesInsert } from "@/db/models/messages";
 import { Conversations } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -58,5 +58,14 @@ export const conversationsRouter = createTRPCRouter({
 				JSON.stringify(input, null, 2),
 				"utf-8",
 			);
+		}),
+	saveMessage: authProcedure
+		.input(
+			z.object({
+				message: MessagesInsert,
+			}),
+		)
+		.mutation(async ({ ctx: { db }, input }) => {
+			await db.insert(Messages).values(input.message);
 		}),
 });

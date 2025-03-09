@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client/react";
-import { useChat } from "@ai-sdk/react";
+import { type Message, useChat } from "@ai-sdk/react";
 import { useMutation } from "@tanstack/react-query";
 import { CalendarIcon, LightbulbIcon, MapPinIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
@@ -12,10 +12,15 @@ import { ChatHeader } from "./header";
 import { ChatMessage } from "./message";
 import { SuggestionCard } from "./suggestion-card";
 
-export function Chat() {
+interface ChatProps {
+	id: string;
+	initialMessages?: Message[];
+}
+
+export function Chat({ id: chatId, initialMessages }: ChatProps) {
 	const trpc = useTRPC();
-	const saveConversation = useMutation(
-		trpc.conversations.saveConversation.mutationOptions(),
+	const saveMessage = useMutation(
+		trpc.conversations.saveMessage.mutationOptions(),
 	);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -28,14 +33,19 @@ export function Chat() {
 		stop,
 		append,
 	} = useChat({
+		id: chatId,
+		initialMessages,
 		onFinish({ content, parts, id, role, createdAt }) {
-			saveConversation.mutate({
+			if (!chatId) return;
+
+			saveMessage.mutate({
 				message: {
-					content,
 					id,
+					content,
 					createdAt,
 					role,
 					parts,
+					conversationUuid: chatId,
 				},
 			});
 		},

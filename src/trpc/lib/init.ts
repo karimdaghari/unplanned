@@ -27,6 +27,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 	return {
 		db,
 		user,
+		supabase,
 		...opts,
 	};
 };
@@ -81,6 +82,7 @@ export const serverActionProcedureBase = tServerAction.procedure
 		const ctx = {
 			user,
 			db,
+			supabase,
 		};
 
 		return opts.next({ ctx });
