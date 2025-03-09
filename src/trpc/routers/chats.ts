@@ -39,32 +39,19 @@ export const chatsRouter = createTRPCRouter({
 				if (!chat) {
 					throw new TRPCError({
 						code: "NOT_FOUND",
-						message: `Chat with ID ${input.id} not found or you don't have access to it`,
+						message: `Chat with ID ${input.id} not found`,
 					});
 				}
 
 				return chat;
 			} catch (error) {
 				console.error(`Error fetching chat with ID ${input.id}:`, error);
-
-				// If it's already a TRPCError, just rethrow it
 				if (error instanceof TRPCError) {
 					throw error;
 				}
-
-				// For database connection errors or other database-related issues
-				if (error instanceof Error && error.message.includes("database")) {
-					throw new TRPCError({
-						code: "INTERNAL_SERVER_ERROR",
-						message: "Database error occurred while retrieving chat",
-						cause: error,
-					});
-				}
-
-				// For any other unexpected errors
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
-					message: "An unexpected error occurred while retrieving the chat",
+					message: "Failed to retrieve chat",
 					cause: error,
 				});
 			}
