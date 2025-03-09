@@ -6,7 +6,14 @@ import { VenueCard } from "./venue-card";
 
 interface ChatMessageProps extends Message {}
 
-export function ChatMessage({ content, role, parts }: ChatMessageProps) {
+export function ChatMessage({
+	content,
+	role,
+	parts,
+	...props
+}: ChatMessageProps) {
+	console.log({ content, role, parts, props });
+
 	return (
 		<div
 			className={cn(
@@ -15,16 +22,16 @@ export function ChatMessage({ content, role, parts }: ChatMessageProps) {
 					"flex items-end gap-2 border rounded-2xl max-w-3xl whitespace-pre-wrap ml-auto bg-accent",
 			)}
 		>
-			{role === "user" && (
-				<div className="prose-base dark:prose-invert">
-					<Markdown>{content}</Markdown>
-				</div>
-			)}
-
-			<div>
-				{parts
-					?.filter((part) => part.type === "tool-invocation")
-					.map(({ toolInvocation }) => {
+			{parts?.map((part) => {
+				switch (part.type) {
+					case "text":
+						return (
+							<div className="prose-base dark:prose-invert">
+								<Markdown>{content}</Markdown>
+							</div>
+						);
+					case "tool-invocation": {
+						const toolInvocation = part.toolInvocation;
 						const { toolName, toolCallId, state } = toolInvocation;
 
 						if (state === "result") {
@@ -53,8 +60,11 @@ export function ChatMessage({ content, role, parts }: ChatMessageProps) {
 								))}
 							</div>
 						);
-					})}
-			</div>
+					}
+					default:
+						return null;
+				}
+			})}
 		</div>
 	);
 }

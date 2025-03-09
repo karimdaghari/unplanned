@@ -8,7 +8,8 @@
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
   <a href="#local-development"><strong>Local Development</strong></a> ·
-  <a href="#deployment"><strong>Deployment</strong></a>
+  <a href="#deployment"><strong>Deployment</strong></a> ·
+  <a href="#possible-improvements"><strong>Possible Improvements</strong></a>
 </p>
 <br/>
 
@@ -109,3 +110,15 @@ For deployment, you'll need to set the following environment variables:
 - `SUPABASE_ANON_KEY`: Your Supabase anonymous key
 - `OPENAI_API_KEY`: Your OpenAI API key
 - `DATABASE_URL`: Your PostgreSQL connection string
+
+## Possible Improvements
+
+With more time, I’d enhance Unplanned by adding:
+
+- **Real Venue Integration**: Use Google Places API for dynamic venue suggestions.
+- **Events/Trips Dashboard**: Add a page to view and edit saved events/trips.
+- **Event/Tri[s] Details**: Support additional fields like budget or attendees.
+- **Personalized AI**: Incorporate user context (e.g., current location, event season and timing etc...), history (i.e., past conversations) or preferences for smarter suggestions.
+- **Advanced AI**: Use **tools** to allow the user to plan everything using natural language.
+- **UI Refinement**: Add animations and custom shadcn/ui tweaks for a unique look.
+- **Testing**: Add unit/integration tests with Jest or Playwright.
