@@ -9,6 +9,7 @@ export const env = createEnv({
 		SUPABASE_URL: z.string().min(1),
 		SUPABASE_ANON_KEY: z.string().min(1),
 		OPENAI_API_KEY: z.string().min(1),
+		SITE_URL: z.string().startsWith("http").endsWith("/"),
 	},
 	experimental__runtimeEnv: process.env,
 });
